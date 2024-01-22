@@ -11,21 +11,21 @@ typedef struct Node
   struct Node* previous;
 }Node;
 
-Node* CreateNode(int32_t data)
+Node* create_node(int32_t data)
 {
-  Node* newNode = ((Node*)malloc(sizeof(Node)));
-  newNode->data = data;
-  newNode->next = NULL;
-  newNode->previous = NULL;
+  Node* new_node = ((Node*)malloc(sizeof(Node)));
+  new_node->data = data;
+  new_node->next = NULL;
+  new_node->previous = NULL;
 
-  return newNode;
+  return new_node;
 }
 
-void AddNode(Node** first ,Node* newNode)
+void add_node(Node** first ,Node* new_node)
 {
   if (*first== NULL)
   {
-    *first = newNode;
+    *first = new_node;
   }
   else
   {
@@ -34,86 +34,86 @@ void AddNode(Node** first ,Node* newNode)
     {
       node = node->next;
     }
-    node->next = newNode;
-    newNode->previous = node;
+    node->next = new_node;
+    new_node->previous = node;
   }
 }
 
-void RemoveNode(Node** origin, int32_t data)
+void remove_node(Node** origin, int32_t data)
 {
-  Node* nodeToRemove = *origin;
+  Node* node_to_remove = *origin;
 
   //finding the node desired throught while loop
-  while(nodeToRemove != NULL && nodeToRemove->data != data)
+  while(node_to_remove != NULL && node_to_remove->data != data)
   {
-    nodeToRemove = nodeToRemove->next;
+    node_to_remove = node_to_remove->next;
   }
 
   //if found
-  if(nodeToRemove != NULL)
+  if(node_to_remove != NULL)
   {
-    if(nodeToRemove ->previous != NULL)
+    if(node_to_remove ->previous != NULL)
     {
-      nodeToRemove->previous->next = nodeToRemove->next;
+      node_to_remove->previous->next = node_to_remove->next;
     }
     else
     {
-      *origin = nodeToRemove;
+      *origin = node_to_remove;
     }
 
-    if(nodeToRemove->next != NULL)
+    if(node_to_remove->next != NULL)
     {
-      nodeToRemove->next->previous = nodeToRemove->previous;
+      node_to_remove->next->previous = node_to_remove->previous;
     }
 
-    free(nodeToRemove);
+    free(node_to_remove);
   }
 
 }
 
-void PushNodeAfter(Node* previousNode, Node* newNode)
+void push_node_after(Node* previous_node, Node* new_node)
 {
-  if(previousNode == NULL)
+  if(previous_node == NULL)
   {
     return; //no use
   }
   
-  newNode->next = previousNode->next; //adds the new node after the previous one
-  newNode->previous = previousNode; //set the pointer to the previous node
+  new_node->next = previous_node->next; //adds the new node after the previous one
+  new_node->previous = previous_node; //set the pointer to the previous node
 
-  if(previousNode->next != NULL)
+  if(previous_node->next != NULL)
   {
-    previousNode->next->previous = newNode;
+    previous_node->next->previous = new_node;
   }
 
-  previousNode->next = newNode;
+  previous_node->next = new_node;
 }
 
-void PushNodeBefore(Node** first, Node* nextNode, Node* nodeToPush)
+void push_node_before(Node** first, Node* next_node, Node* node_to_push)
 {
-  if(nextNode == NULL)
+  if(next_node == NULL)
   {
     return;
   }
 
-  nodeToPush->next = nextNode;
-  nodeToPush->previous = nextNode->previous;
+  node_to_push->next = next_node;
+  node_to_push->previous = next_node->previous;
 
-  if(nextNode->previous == NULL)
+  if(next_node->previous == NULL)
   {
-    nextNode->previous->next = nodeToPush;
+    next_node->previous->next = node_to_push;
   }
   else
   {
-    *first = nodeToPush;
+    *first = node_to_push;
   }
-  nextNode->previous = nodeToPush;
+  next_node->previous = node_to_push;
 }
 
 
-static void PrintList(Node* nodeList)
+void print_list(Node* node_list)
 {
-  Node* node = nodeList;
+  Node* node = node_list;
   while(node != NULL)
   {
     printf("%d -> ", node->data);
@@ -123,7 +123,7 @@ static void PrintList(Node* nodeList)
 
   printf("\n");
 
-  node = nodeList;
+  node = node_list;
 
   while(node->next != NULL)
   {
@@ -140,39 +140,42 @@ static void PrintList(Node* nodeList)
 
 int main(int argc, char *argv[])
 {
-  Node* a = CreateNode(1);
-  Node* b = CreateNode(2);
-  Node* c = CreateNode(3);
-  Node* d = CreateNode(4);
+  Node* a = create_node(1);
+  Node* b = create_node(2);
+  Node* c = create_node(3);
+  Node* d = create_node(4);
 
-  Node* nodeList = NULL;
-  AddNode(&nodeList, a);
-  AddNode(&nodeList, b);
-  AddNode(&nodeList, c);
-  AddNode(&nodeList, d);
+  Node* node_list = NULL;
+  add_node(&node_list, a);
+  add_node(&node_list, b);
+  add_node(&node_list, c);
+  add_node(&node_list, d);
 
-  PrintList(nodeList);
+  print_list(node_list);
 
   printf("remove b node \n");
 
-  RemoveNode(&nodeList, 2); //removing b node
+  remove_node(&node_list, 2); //removing b node
 
-  PrintList(nodeList);
+  print_list(node_list);
 
   printf("\n");
   printf("push node after list \n");
 
-  Node* e = CreateNode(5);
-  Node* nodeEToList = nodeList->next->next;
-  PushNodeAfter(nodeEToList, e);
-  PrintList(nodeList);
+  Node* e = create_node(5);
+  Node* node_e_to_list = node_list->next->next;
+  push_node_after(node_e_to_list, e);
+  print_list(node_list);
 
   printf("\npush node before\n");
-  Node* f = CreateNode(6);
+  Node* f = create_node(6);
 
-  Node* pushFtoList = nodeList->next->next;
-  PushNodeBefore(&nodeList, pushFtoList, f);
-  PrintList(nodeList);
+  Node* push_f_to_list = node_list->next->next;
+  push_node_before(&node_list, push_f_to_list, f);
+  print_list(node_list);
+
+  free(a); free(b); free(c); free(d); free(e); free(f);
+  free(node_list);
 
   return EXIT_SUCCESS;
 }

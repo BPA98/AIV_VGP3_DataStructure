@@ -11,6 +11,7 @@
 #define KEY_FOUND 0
 #define KEY_NOT_FOUND 1
 
+//rappresenting item
 typedef struct Item
 {
   const char* key;
@@ -19,53 +20,56 @@ typedef struct Item
 
 } Item;
 
-Item* CreateItem(const char* keyValue, size_t lenght)
+//create item
+Item* create_item(const char* key_value, size_t lenght)
 {
-  Item* newItem = ((Item*)malloc(sizeof(Item)));
-  newItem->key = keyValue;
-  newItem->len = lenght;
-  return newItem;
+  Item* new_item = ((Item*)malloc(sizeof(Item)));
+  new_item->key = key_value;
+  new_item->len = lenght;
+  return new_item;
 }
 
-void AddItem(Item** itemList, const char* key, size_t lenght)
+void add_item(Item** item_list, const char* key, size_t lenght)
 {
-  Item* item = CreateItem(key, lenght);
-  item->next = *itemList;
-  *itemList = item;
+  Item* item = create_item(key, lenght);
+  item->next = *item_list;
+  *item_list = item;
 }
 
-void RemoveItem(Item** itemList, const char* key)
+void remove_item(Item** item_list, const char* key)
 {
-  Item* list = *itemList;
-  Item* previousItem = NULL;
+  Item* list = *item_list;
+  Item* previous_item = NULL;
 
   while(list != NULL)
   {
     if(strcmp(list->key, key) == 0)
     {
-      if(previousItem == NULL)
+      if(previous_item == NULL)
       {
-        *itemList = list->next;
+        *item_list = list->next;
       }
       else
       {
-        previousItem->next = list->next;
+        previous_item->next = list->next;
       }
 
       free(list);
       return;
     }
 
-    previousItem = list;
+    previous_item = list;
     list = list->next;
   }
 
 
 }
 
-int Find(const Item* itemList, const char* key)  
+// Function to find an item with the given key in the linked list
+
+int find(const Item* item_list, const char* key)  
 {
-  const Item* item = itemList;
+  const Item* item = item_list;
 
   while(item != NULL)
   {
@@ -84,9 +88,9 @@ int Find(const Item* itemList, const char* key)
 }
 
 
-void PrintList(Item** itemList)
+void print_list(Item** item_list)
 {
-  const Item* item = *itemList;
+  const Item* item = *item_list;
 
   while(item != NULL)
   {
@@ -95,17 +99,19 @@ void PrintList(Item** itemList)
   }
 }
 
-void AddUniqueKey(Item** itemList, const char* key, size_t keySize)
+//  Function to add a unique key to the linked list
+
+void add_unique_key(Item** item_list, const char* key, size_t key_size)
 {
-  if(!Find(*itemList, key))
+  if(!find(*item_list, key))
   {
     printf("key %s already exists return..\n", key);
     return;
   }
 
-  Item* newItem = CreateItem(key, keySize);
-  newItem->next = *itemList;
-  *itemList = newItem;
+  Item* new_item = create_item(key, key_size);
+  new_item->next = *item_list;
+  *item_list = new_item;
 
 }
 
@@ -113,22 +119,24 @@ void AddUniqueKey(Item** itemList, const char* key, size_t keySize)
 int main(int argc, char *argv[])
 {
   Item* itemList = NULL;
-  AddItem(&itemList, "first", 0);
-  AddItem(&itemList, "second", 1);
-  AddItem(&itemList, "third", 2);;
+  add_item(&itemList, "first", 0);
+  add_item(&itemList, "second", 1);
+  add_item(&itemList, "third", 2);;
 
-  PrintList(&itemList);
+  print_list(&itemList);
 
-  Find(itemList, "third");
-  Find(itemList, "fourth");
+  find(itemList, "third");
+  find(itemList, "fourth");
 
   printf("removing item\n");
 
-  RemoveItem(&itemList, "first");
-  PrintList(&itemList);
+  remove_item(&itemList, "first");
+  print_list(&itemList);
   printf("\n");
-  AddUniqueKey(&itemList, "fift", 3);
-  PrintList(&itemList);
+  add_unique_key(&itemList, "fift", 3);
+  print_list(&itemList);
+
+  free(itemList);
 
   return EXIT_SUCCESS;
 }
